@@ -3,10 +3,10 @@ Different pathfinding implementations in the Unity Game Engine
 
 # Currently Implemented Pathfinding Algorithms
 ## A*:
-- [x] Solving on a QuadTree
-Currently the A* implementation for QuadTrees does not use custom cost for movement. This can be solved in different ways by using multiple layers or implementing the cost directly in the QuadTree node class. The latter would be more optimal in terms of performance, the former will allow you to make use of dynamic updates to the pathfinding with better performance.
-- [x] Solving on a Grid
-Uses a grid class which contains nodes that have the cost of movement. Currently this is not optimized for grid-based search.
+- [x] Solving on a QuadTree  
+Currently the A* implementation for QuadTrees does not use custom cost for movement. This can be solved in different ways by using multiple layers or implementing the cost directly in the QuadTree node class. The latter would be more optimal in terms of performance, the former will allow you to make use of dynamic updates to the pathfinding with better performance.  
+- [x] Solving on a Grid  
+Uses a grid class which contains nodes that have the cost of movement. Currently this is not optimized for grid-based search.  
 - [ ] Solving on a Graph
 - [ ] Skip/Waypoint A*
 - [ ] Solving on a NavMesh
@@ -25,8 +25,8 @@ Uses a grid class which contains nodes that have the cost of movement. Currently
 
 # Currently Implemented Utilities
 ## Quad-Tree (Recursive, Managed):
-The current implementation for QuadTrees can be used dynamically by clearing it and then reinserting all the points. It's not optimized for dynamic use, but can still handle reinserting >50k points.
-It's currently without its outer handler which means that it wont check if points are inside the QuadTrees boundary when inserted. This is a minor optimization tweak where it only uses the quadrant based on the center of the QuadTree node. Points outside the boundary will always end up on the edges of the corresponding quadrant it would end up in.
+The current implementation for QuadTrees can be used dynamically by clearing it and then reinserting all the points. It's not optimized for dynamic use, but can still handle reinserting >50k points.  
+It's currently without its outer handler which means that it wont check if points are inside the QuadTrees boundary when inserted. This is a minor optimization tweak where it only uses the quadrant based on the center of the QuadTree node. Points outside the boundary will always end up on the edges of the corresponding quadrant it would end up in.  
 - [x] Insertion
 - [x] Collision Search
 - [x] Point Search
