@@ -8,7 +8,7 @@ using Priority_Queue;
 using Stopwatch = System.Diagnostics.Stopwatch;
 using System.Linq;
 
-public class AStar : MonoBehaviour
+public static class AStar
 {
     public static void QuadTreeAStar (QuadTree quadTree, QuadTree start, QuadTree end, out Dictionary<QuadTree, QuadTree> path)
     {
@@ -24,27 +24,27 @@ public class AStar : MonoBehaviour
 
         path = new Dictionary<QuadTree, QuadTree> ( );
         var openset = new FastPriorityQueue<QuadTree> (quadTree.SubdivisionCount ( ));
-        var costs = new Dictionary<QuadTree, float> ( );
 
         var neighbours = new List<QuadTree> ( );
 
         openset.Enqueue (start, 0);
-        costs[start] = 0;
         path[start] = start;
+
+        QuadTree current = null;
+        float newcost = 0f;
 
         while (openset.Count > 0)
         {
 #if DEBUG
             if (timeout.ElapsedMilliseconds > 1000) throw new System.OperationCanceledException ("Path Generation Timed Out");
 #endif
-            if (openset.First == end)
-                break;
 
-            var current = openset.Dequeue ( );
+            if ((current = openset.Dequeue ( )) == end) break;
 
 #if LOG_TIME
             bench.Restart ( );
 #endif
+
             quadTree.Neighbours (current, ref neighbours);
 
 #if LOG_TIME
@@ -56,22 +56,19 @@ public class AStar : MonoBehaviour
             {
                 if (neighbour.Count != 0) continue;
 
-                float newcost = costs[current] + (current.center - neighbour.center).sqrMagnitude * 10f;
+                newcost = current.Priority + (current.center - neighbour.center).sqrMagnitude + (neighbour.center - end.center).sqrMagnitude;
 
-                if (!costs.ContainsKey (neighbour) || newcost < costs[neighbour])
+                if (newcost < neighbour.Priority)
                 {
-                    costs[neighbour] = newcost;
-
-                    float nprio = newcost + (neighbour.center - end.center).sqrMagnitude * 100f;//quadTree.size;
-
                     if (!openset.Contains (neighbour))
-                        openset.Enqueue (neighbour, nprio);
+                        openset.Enqueue (neighbour, newcost);
                     else
-                        openset.UpdatePriority (neighbour, nprio);
+                        openset.UpdatePriority (neighbour, newcost);
 
                     path[neighbour] = current;
                 }
             }
+
             neighbours.Clear ( );
         }
 

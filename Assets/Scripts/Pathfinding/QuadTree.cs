@@ -75,15 +75,18 @@ public class QuadTree : FastPriorityQueueNode
     /// <param name="point"></param>
     public void Insert (Vector2 point)
     {
-        if (isLeaf || (!subdivided && count < maxNodes))
+        if (subdivided)
+        {
+            InsertIntoSubQuad (point);
+            return;
+        }
+        else if (isLeaf || count < maxNodes)
         {
             points[count++] = point;
             return;
         }
 
-        if (!subdivided)
-            Subdivide ( );
-
+        Subdivide ( );
         InsertIntoSubQuad (point);
     }
 
@@ -310,8 +313,10 @@ public class QuadTree : FastPriorityQueueNode
 
     public void ResetPQ ( )
     {
+#if UNITY_EDITOR
         Queue = null;
         QueueIndex = 0;
+#endif
 
         if (subdivided)
         {
